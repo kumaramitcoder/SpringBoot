@@ -38,27 +38,27 @@ public class ProductController {
 		this.getProductServiceById=getProductServiceById;
 	}
 	
-	@PostMapping
+	@PostMapping("/product")
 	public ResponseEntity<ProductDTO> createProduct(@RequestBody Product product){
 		return createProductService.execute(product);
 	}
 	
-	@GetMapping
+	@GetMapping("/products")
 	public ResponseEntity<List<ProductDTO>> getProduct(){
 		return getProductService.execute(null);
 	}
-	
+	@GetMapping("/product/{id}")
 	public ResponseEntity<ProductDTO> getProductById(@PathVariable Integer id){
 		return getProductById(id);
 	}
 	
-	@PutMapping
+	@PutMapping("/product/{id}")
 	public ResponseEntity<ProductDTO> updateProduct(@PathVariable Integer id, @RequestBody Product product){
 		return updateProductService.execute(new UpdatedProductCommand(id, product));
 	}
-	@DeleteMapping
-	public ResponseEntity<String> deleteProduct(){
-		return deleteProductService.execute(null);
+	@DeleteMapping("/product/{id}")
+	public ResponseEntity<Void> deleteProduct(@PathVariable Integer id){
+		return deleteProductService.execute(id);
 	}
 	
 }
