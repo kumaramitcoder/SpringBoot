@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.example.springbootexample.entity.Product;
 import com.example.springbootexample.entity.ProductDTO;
 import com.example.springbootexample.entity.UpdatedProductCommand;
+import com.example.springbootexample.exception.ProductNotFoundException;
 import com.example.springbootexample.repository.ProductRepository;
 
 @Service
@@ -31,6 +32,6 @@ public class UpdateProductService implements Command<UpdatedProductCommand , Pro
 			productRepository.save(product);
 			return ResponseEntity.ok(new ProductDTO(product));
 		}
-		return null;
+		throw new ProductNotFoundException();
 	}
 }

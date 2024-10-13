@@ -2,12 +2,15 @@ package com.example.springbootexample.service;
 
 import java.util.Optional;
 
+import javax.management.RuntimeErrorException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.springbootexample.entity.Product;
+import com.example.springbootexample.exception.ProductNotFoundException;
 import com.example.springbootexample.repository.ProductRepository;
 
 @Service
@@ -27,7 +30,7 @@ public class DeleteProductService implements Command<Integer, Void> {
 			productRepository.deleteById(id);
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		}
-		return null;
+		throw new ProductNotFoundException();
 	}
 
 	
