@@ -3,6 +3,7 @@ package com.example.springbootexample.service;
 import com.example.springbootexample.entity.Product;
 import com.example.springbootexample.entity.ProductDTORequest;
 import com.example.springbootexample.entity.ProductDTOResponse;
+import com.example.springbootexample.exception.ProductNotFoundException;
 import com.example.springbootexample.repository.ProductRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,14 +33,10 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public ResponseEntity<ProductDTOResponse> getProductById(int id) {
-        Optional<Product> optionalProduct = productRepository.findById(id);
-        if (optionalProduct.isPresent()){
-            Product product = optionalProduct.get();
-            ProductDTOResponse productDTOResponse = new ProductDTOResponse(product.getId(),product.getName(),product.getDescription());
-            return ResponseEntity.status(HttpStatus.OK).body(productDTOResponse);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+      Product product = productRepository.findById(id)
+              .orElseThrow(()->new ProductNotFoundException("Book not Found with Id "+id));
+      ProductDTOResponse productDTOResponse = new ProductDTOResponse(product.getId(), product.getName(), product.getDescription());
+      return ResponseEntity.status(HttpStatus.OK).body(productDTOResponse);
     }
 
     @Override
@@ -59,28 +56,23 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public ResponseEntity<ProductDTOResponse> updateProduct(int id, ProductDTORequest productDTORequest) {
-        Optional<Product> existProduct = productRepository.findById(id);
-        if (existProduct.isPresent()){
-            Product product = existProduct.get();
-            product.setName(productDTORequest.getName());
-            product.setDescription(productDTORequest.getDescription());
+        Product product = productRepository.findById(id)
+                .orElseThrow(()->new ProductNotFoundException("Product not found with id : "+id));
+        product.setName(productDTORequest.getName());
+        product.setDescription(productDTORequest.getDescription());
 
-            Product updateProduct = productRepository.save(product);
-            ProductDTOResponse productDTOResponse = new ProductDTOResponse(updateProduct.getId(), updateProduct.getName(), updateProduct.getDescription());
-            return ResponseEntity.status(HttpStatus.OK).body(productDTOResponse);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+        Product updateProduct = productRepository.save(product);
+        ProductDTOResponse productDTOResponse = new ProductDTOResponse(updateProduct.getId(), updateProduct.getName(), updateProduct.getDescription());
+
+        return ResponseEntity.status(HttpStatus.OK).body(productDTOResponse);
+
     }
 
     @Override
     public ResponseEntity<Void> deleteProduct(int id) {
-        Optional<Product> existProduct = productRepository.findById(id);
-        if (existProduct.isPresent()){
-            productRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        Product product = productRepository.findById(id)
+                .orElseThrow(()-> new ProductNotFoundException("Product not found with id : "+id));
+        productRepository.deleteById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
