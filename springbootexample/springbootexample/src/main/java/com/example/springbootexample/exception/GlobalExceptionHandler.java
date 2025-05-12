@@ -14,22 +14,24 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<Object> handleProductNotFoundEx(ProductNotFoundException px, WebRequest webRequest){
+    public ResponseEntity<Object> handleProductNotFoundException(ProductNotFoundException p, WebRequest w){
         Map<String, Object> map = new HashMap<>();
-        map.put("timestamp" , LocalDateTime.now());
-        map.put("message", px.getMessage());
-        map.put("details", webRequest.getDescription(false));
+        map.put("timeStamp", LocalDateTime.now());
+        map.put("message", p.getMessage());
+        map.put("details", w.getDescription(false));
 
         return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
     }
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleGlobalEx(Exception ex , WebRequest webRequest){
-        Map<String , Object> map = new HashMap<>();
-        map.put("timestamp" , LocalDateTime.now());
-        map.put("message", ex.getMessage());
-        map.put("details", webRequest.getDescription(false));
 
-        return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR );
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleGlobalException(Exception ex, WebRequest w){
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("timeStamp", LocalDateTime.now());
+        map1.put("message", ex.getMessage());
+        map1.put("details", w.getDescription(false));
+
+        return new ResponseEntity<>(map1, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
 
 }

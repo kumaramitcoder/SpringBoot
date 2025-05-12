@@ -9,16 +9,14 @@ import java.util.List;
 
 public interface ProductService {
 
-    ResponseEntity<List<ProductDTOResponse>> getAllProducts();
+    public ResponseEntity<List<ProductDTOResponse>> findAllProduct();
 
-    ResponseEntity<ProductDTOResponse> getProductById(int id);
+    public ResponseEntity<ProductDTOResponse> findByIdProduct(Integer id);
 
-    ResponseEntity<ProductDTOResponse> createProduct(ProductDTORequest productDTORequest);
+    public ResponseEntity<ProductDTOResponse> createProduct(ProductDTORequest productDTORequest);
 
+    public ResponseEntity<ProductDTOResponse> updateProduct(Integer id, ProductDTORequest productDTORequest);
 
-    ResponseEntity<ProductDTOResponse> updateProduct(int id, ProductDTORequest productDTORequest);
-
-    ResponseEntity<Void> deleteProduct(int id);
-
+    public ResponseEntity<Void> deleteProduct(Integer id);
 
 }
