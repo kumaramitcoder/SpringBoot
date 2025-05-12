@@ -1,7 +1,10 @@
 package com.example.springbootexample.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -31,6 +34,21 @@ public class GlobalExceptionHandler {
         map1.put("details", w.getDescription(false));
 
         return new ResponseEntity<>(map1, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Map<String,Object>> handleResourceNotFound(ResourceNotFoundException rx,WebRequest webRequest){
+        Map<String, Object> errorBody = new HashMap<>();
+        errorBody.put("status", HttpStatus.NOT_FOUND.value());
+        errorBody.put("error", "Not Found");
+        errorBody.put("message", rx.getMessage());
+        errorBody.put("timestamp", LocalDateTime.now());
+
+        return new ResponseEntity<>(errorBody, HttpStatus.NOT_FOUND);
+    }
+
+    public  ResponseEntity<String> handlegenericException(Exception ex){
+        return  new ResponseEntity<>("Something went wrong "+ ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
